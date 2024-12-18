@@ -1,8 +1,15 @@
+// Components:
+import ClockFace from './Components/ClockFace';
+
 // CSS
 import './App.css';
 
 function App() {
-  return <></>;
+  return (
+    <>
+      <ClockFace />
+    </>
+  );
 }
 
 export default App;

@@ -1,42 +1,35 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  --clock-radius: 150px;
+}
+/* Clock Face */
+.face {
+  position: relative;
+  width: calc(var(--clock-radius) * 2);
+  height: calc(var(--clock-radius) * 2);
+  background-color: yellow;
+  margin: 100px;
+  background-image: url(./public/dial-01.png);
+  background-size: cover;
+  background-position: center;
+}
+/* Arrows */
+.arrow {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  z-index: 10;
+  background-color: black;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.hour {
+  width: 3%;
+  height: 30%;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.minute {
+  width: 2%;
+  height: 42%;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.second {
+  width: 1%;
+  height: 44%;
 }
