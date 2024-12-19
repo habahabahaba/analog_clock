@@ -1,12 +1,12 @@
 // Types, interfaces and enumns:
 import { TimeZone } from '../types/timeZones';
-type syncClockOutput = {
+export type timeObject = {
   hours: number;
   minutes: number;
   seconds: number;
 };
 
-export function syncClock(timeZone: TimeZone | null = null): syncClockOutput {
+export function syncClock(timeZone: TimeZone | null = null): timeObject {
   if (!timeZone) {
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZone;
   }
@@ -19,7 +19,7 @@ export function syncClock(timeZone: TimeZone | null = null): syncClockOutput {
     hour12: false,
   }).format(new Date());
 
-  const [hours, minutes, seconds] = currentTime.split(';').map((str) => +str);
+  const [hours, minutes, seconds] = currentTime.split(':').map((str) => +str);
 
   return { hours, minutes, seconds };
 }

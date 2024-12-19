@@ -1,4 +1,4 @@
-export enum TimeZone {
+export enum TimeZones {
   // America
   America_New_York = 'America/New_York',
   America_Chicago = 'America/Chicago',
@@ -86,3 +86,5 @@ export enum TimeZone {
   Etc_GMT_Plus_12 = 'Etc/GMT+12',
   Etc_GMT_Minus_12 = 'Etc/GMT-12',
 }
+
+export type TimeZone = (typeof TimeZones)[keyof typeof TimeZones];

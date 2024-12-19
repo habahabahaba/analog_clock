@@ -3,7 +3,6 @@
 // Store:
 // React Router:
 // React:
-import { useState, useEffect } from 'react';
 // Context:
 // Hooks:
 import useClockMovement from '../hooks/useClockMovement';
@@ -12,21 +11,19 @@ import ClockArrow from './ClockArrow';
 // CSS:
 // Types, interfaces and enumns:
 import { type FC } from 'react';
+import { TimeZones } from '../types/timeZones';
 interface ClockFaceProps {}
 
 // let intervalId: number;
 
 const ClockFace: FC<ClockFaceProps> = () => {
-  //   const [angle, setAngle] = useState(0);
-  //   useEffect(() => {
-  //     intervalId = setInterval(() => {
-  //       setAngle((state) => (state + 6) % 360);
-  //     }, 1000);
-  //     return () => {
-  //       clearInterval(intervalId);
-  //     };
-  //   }, []);
-  const { secAngle, minAngle, hourAngle } = useClockMovement();
+  const { secAngle, minAngle, hourAngle } = useClockMovement(
+    //   {
+    //   timeZone: TimeZones.America_Bogota,
+    //   startTime: { hours: 3, minutes: 45, seconds: 45 },
+    // }
+    null
+  );
 
   // JSX:
   return (
@@ -34,6 +31,9 @@ const ClockFace: FC<ClockFaceProps> = () => {
       <ClockArrow arrowType='hour' angle={hourAngle} />
       <ClockArrow arrowType='minute' angle={minAngle} />
       <ClockArrow arrowType='second' angle={secAngle} />
+      {/* <ClockArrow arrowType='hour' angle={315} />
+      <ClockArrow arrowType='minute' angle={315} />
+      <ClockArrow arrowType='second' angle={315} /> */}
     </div>
   );
 };

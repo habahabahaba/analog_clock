@@ -8,17 +8,22 @@
   height: calc(var(--clock-radius) * 2);
   background-color: yellow;
   margin: 100px;
-  background-image: url(./public/dial-01.png);
+  background-image: url(./dial-00.webp);
   background-size: cover;
   background-position: center;
+  /* background: radial-gradient(
+    circle,
+    red 7%, white 7%
+  ); */
 }
 /* Arrows */
 .arrow {
   position: absolute;
-  bottom: 50%;
+  bottom: calc(50% - 10px);
   left: 50%;
   z-index: 10;
   background-color: black;
+  transform-origin: 50% calc(100% - 10px);
 }
 
 .hour {
@@ -32,4 +37,14 @@
 .second {
   width: 1%;
   height: 44%;
+  /* animation: rotate-arrow 60s linear infinite forwards; */
+}
+
+@keyframes rotate-arrow {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }

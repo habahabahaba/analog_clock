@@ -11,6 +11,7 @@ import type { FC } from 'react';
 interface ClockArrowProps {
   arrowType: 'hour' | 'minute' | 'second';
   angle: number;
+  // start: number;
 }
 
 const ClockArrow: FC<ClockArrowProps> = ({ arrowType, angle }) => {
@@ -19,7 +20,7 @@ const ClockArrow: FC<ClockArrowProps> = ({ arrowType, angle }) => {
     <div
       className={`arrow ${arrowType}`}
       style={{
-        transformOrigin: '50% 100%',
+        // transform: `translateX(-50%)`,
         transform: `translateX(-50%) rotate(${angle}deg)`,
       }}
     ></div>
