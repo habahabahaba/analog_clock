@@ -25,6 +25,7 @@ const minTick = 360 / hour;
 const hourTick = 360 / halfDay;
 
 let tickId: number;
+let syncId: number;
 let syncedTime: timeObject;
 
 export default function useClockMovement(
@@ -49,19 +50,25 @@ export default function useClockMovement(
   }, []);
 
   // Syncing the clock:
-  // Periodic time sync (every 64 seconds):
   useEffect(
-    function periodicSync() {
-      if (!(seconds % 64)) {
+    function sync() {
+      // Initial time sync:
+      syncedTime = syncClock(timeZone);
+      console.log('[syncClock] [initial] syncedTime:', syncedTime);
+      setSeconds(() => toSeconds(syncedTime));
+
+      // Periodic time sync (every 64 seconds):
+      syncId = setInterval(() => {
         syncedTime = syncClock(timeZone);
-
-        console.log('[syncClock] seconds:', seconds);
-        console.log('[syncClock] syncedTime:', syncedTime);
-
+        console.log('[syncClock] [periodic] syncedTime:', syncedTime);
         setSeconds(() => toSeconds(syncedTime));
-      }
+      }, 64000);
+
+      return () => {
+        clearInterval(syncId);
+      };
     },
-    [timeZone, seconds]
+    [timeZone]
   );
 
   const secAngle = calculateAngle(seconds, minute, secTick, offset);
