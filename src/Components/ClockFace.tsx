@@ -10,20 +10,22 @@ import useClockMovement from '../hooks/useClockMovement';
 import ClockArrow from './ClockArrow';
 // CSS:
 // Types, interfaces and enumns:
-import { type FC } from 'react';
+import { useMemo, type FC } from 'react';
 import { TimeZones } from '../types/timeZones';
 interface ClockFaceProps {}
 
-// let intervalId: number;
-
 const ClockFace: FC<ClockFaceProps> = () => {
-  const { secAngle, minAngle, hourAngle } = useClockMovement(
-    //   {
-    //   timeZone: TimeZones.America_Bogota,
-    //   startTime: { hours: 3, minutes: 45, seconds: 45 },
-    // }
-    null
+  const clockMovementInput = useMemo(
+    () => ({
+      timeZone: TimeZones.America_Bogota,
+      startTime: { hours: 3, minutes: 5, seconds: 45 },
+    }),
+    // null
+    []
   );
+
+  const { secAngle, minAngle, hourAngle } =
+    useClockMovement(clockMovementInput);
 
   // JSX:
   return (

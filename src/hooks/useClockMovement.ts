@@ -30,15 +30,8 @@ let syncedTime: timeObject;
 export default function useClockMovement(
   inputObj: ClockMovementInput = null
 ): ClockMovementOutput {
-  // Destructuring argument:
-  const startTime = inputObj?.startTime || null;
-  const timeZone = inputObj?.timeZone || null;
-
-  // Calculating start-time offset for later sync:
-  const offset = useMemo(
-    () => (startTime ? calculateOffset(startTime, timeZone) : 0),
-    []
-  );
+  const timeZone = inputObj ? inputObj.timeZone : null;
+  const offset = useMemo(() => calculateOffset(inputObj), [inputObj]);
 
   // State:
   const [seconds, setSeconds] = useState(0);
@@ -56,16 +49,7 @@ export default function useClockMovement(
   }, []);
 
   // Syncing the clock:
-  // Initial time sync (for startTime cases):
-  useEffect(
-    function initialSync() {
-      syncedTime = syncClock();
-      setSeconds(() => toSeconds(syncedTime) + offset);
-    },
-    [timeZone, offset]
-  );
-
-  // Periodic time sync:
+  // Periodic time sync (every 64 seconds):
   useEffect(
     function periodicSync() {
       if (!(seconds % 64)) {
@@ -74,17 +58,26 @@ export default function useClockMovement(
         console.log('[syncClock] seconds:', seconds);
         console.log('[syncClock] syncedTime:', syncedTime);
 
-        setSeconds(() => toSeconds(syncedTime) + offset);
+        setSeconds(() => toSeconds(syncedTime));
       }
     },
-    [timeZone, seconds, offset]
+    [timeZone, seconds]
   );
 
-  const secAngle = (seconds % minute) * secTick;
-  const minAngle = +((seconds % hour) * minTick).toFixed(2);
-  const hourAngle = +((seconds % halfDay) * hourTick).toFixed(2);
+  const secAngle = calculateAngle(seconds, minute, secTick, offset);
+  const minAngle = calculateAngle(seconds, hour, minTick, offset);
+  const hourAngle = calculateAngle(seconds, halfDay, hourTick, offset);
 
   return { secAngle, minAngle, hourAngle };
+}
+
+function calculateAngle(
+  seconds: number,
+  parentInterval: number,
+  secAngle: number,
+  secOffset = 0
+): number {
+  return +(((seconds % parentInterval) + secOffset) * secAngle).toFixed(2);
 }
 
 function toSeconds({ hours, minutes, seconds }: timeObject): number {
@@ -96,16 +89,18 @@ function toSeconds({ hours, minutes, seconds }: timeObject): number {
 }
 
 function calculateOffset(
-  startTime: timeObject,
-  timeZone: TimeZone | null
+  clockMovementInput: ClockMovementInput | null
 ): number {
+  if (!clockMovementInput || !clockMovementInput.startTime) return 0;
+
+  const { timeZone, startTime } = clockMovementInput;
   const startSeconds = toSeconds(startTime);
   const currSeconds = toSeconds(syncClock(timeZone));
-  const currOffset = startSeconds - currSeconds;
+  const offset = startSeconds - currSeconds;
 
   console.log('[calculateOffset] startSeconds:', startSeconds);
   console.log('[calculateOffset] currSeconds:', currSeconds);
-  console.log('[calculateOffset] currOffset:', currOffset);
+  console.log('[calculateOffset] offset:', offset);
 
-  return currOffset;
+  return offset;
 }
