@@ -4,13 +4,12 @@
 /* Clock Face */
 .face {
   position: relative;
+  z-index: 1;
   width: calc(var(--clock-radius) * 2);
   height: calc(var(--clock-radius) * 2);
-  background-color: yellow;
   margin: 100px;
-  background-image: url(./clock-dials/dial-08.webp);
-  background-size: cover;
-  background-position: center;
+  /* for testing dial centering :*/
+  background-color: khaki;
 
   /* for testing arrows centering */
   /* background: radial-gradient(
@@ -24,6 +23,16 @@
     white 57.5%
   ); */
 }
+
+.dial {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background-size: cover;
+  background-position: center;
+}
+
 /* Arrows */
 .arrow {
   position: absolute;

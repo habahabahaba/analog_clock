@@ -8,11 +8,32 @@
 // CSS:
 // Types, interfaces and enumns:
 import type { FC } from 'react';
-interface ClockDialProps {}
+interface ClockDialProps {
+  backgroundURL: string;
+  xOffset?: string;
+  yOffset?: string;
+  angle?: number;
+}
 
-const ClockDial: FC<ClockDialProps> = () => {
+const ClockDial: FC<ClockDialProps> = ({
+  backgroundURL,
+  xOffset = '0',
+  yOffset = '',
+  angle = 0,
+}) => {
   // JSX:
-  return <></>;
+  return (
+    <div
+      className='dial'
+      style={{
+        left: `calc(0% + ${xOffset})`,
+        bottom: `calc(0% + ${yOffset})`,
+        backgroundImage: `url(${backgroundURL})`,
+        transform: `rotate(${angle}deg)`,
+        // backgroundColor: 'green',
+      }}
+    ></div>
+  );
 };
 
 export default ClockDial;
