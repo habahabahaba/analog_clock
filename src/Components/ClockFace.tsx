@@ -11,7 +11,7 @@ import ClockArrow from './ClockArrow';
 // CSS:
 // Types, interfaces and enumns:
 import { useMemo, type FC } from 'react';
-import { TimeZones } from '../types/timeZones';
+import { TimeZones } from '../types/timeZones.type';
 interface ClockFaceProps {}
 
 const ClockFace: FC<ClockFaceProps> = () => {

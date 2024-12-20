@@ -1,5 +1,5 @@
 // Types, interfaces and enumns:
-import { TimeZone } from '../types/timeZones';
+import { TimeZone } from '../types/timeZones.type';
 export type timeObject = {
   hours: number;
   minutes: number;

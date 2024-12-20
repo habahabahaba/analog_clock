@@ -4,7 +4,7 @@ import { syncClock } from '../utils/syncClock.ts';
 import { useState, useEffect, useMemo } from 'react';
 // Types, interfaces and enumns:
 import type { timeObject } from '../utils/syncClock.ts';
-import type { TimeZone } from '../types/timeZones';
+import type { TimeZone } from '../types/index.type.ts';
 type ClockMovementInput = {
   timeZone: TimeZone | null;
   startTime: timeObject | null;

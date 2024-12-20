@@ -1,3 +1,5 @@
+export type ArrowType = 'hour' | 'minute' | 'second';
+
 export enum TimeZones {
   // America
   America_New_York = 'America/New_York',
