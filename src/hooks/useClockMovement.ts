@@ -1,38 +1,31 @@
 // Utils:
-import { syncClock } from '../utils/syncClock.ts';
+import { ClockMovementUtils } from '../utils/clockMovementUtils.ts';
 // React:
 import { useState, useEffect, useMemo } from 'react';
 // Types, interfaces and enumns:
-import type { timeObject } from '../utils/syncClock.ts';
-import type { TimeZone } from '../types/index.type.ts';
-type ClockMovementInput = {
-  timeZone: TimeZone | null;
-  startTime: timeObject | null;
-} | null;
+import type { TimeZone, TimeObject } from '../types/index.type.ts';
 interface ClockMovementOutput {
   secAngle: number;
   minAngle: number;
   hourAngle: number;
 }
 
-const minute = 60;
-const hour = 3600;
-const halfDay = 43200;
-const day = 86400;
-
-const secTick = 6;
-const minTick = 360 / hour;
-const hourTick = 360 / halfDay;
+// Getting helpers from ClockMovementUtils:
+const { calculateOffset, syncTime, toSeconds, calculateArrowAngle, day } =
+  ClockMovementUtils;
 
 let tickId: number;
 let syncId: number;
-let syncedTime: timeObject;
+let syncedTime: TimeObject;
 
 export default function useClockMovement(
-  inputObj: ClockMovementInput = null
+  timeZone: TimeZone | null = null,
+  startSeconds: number = 0
 ): ClockMovementOutput {
-  const timeZone = inputObj ? inputObj.timeZone : null;
-  const offset = useMemo(() => calculateOffset(inputObj), [inputObj]);
+  const offset = useMemo(
+    () => calculateOffset(startSeconds, timeZone),
+    [startSeconds, timeZone]
+  );
 
   // State:
   const [seconds, setSeconds] = useState(0);
@@ -53,14 +46,14 @@ export default function useClockMovement(
   useEffect(
     function sync() {
       // Initial time sync:
-      syncedTime = syncClock(timeZone);
-      console.log('[syncClock] [initial] syncedTime:', syncedTime);
+      syncedTime = syncTime(timeZone);
+      console.log('[syncTime] [initial] syncedTime:', syncedTime);
       setSeconds(() => toSeconds(syncedTime));
 
       // Periodic time sync (every 64 seconds):
       syncId = setInterval(() => {
-        syncedTime = syncClock(timeZone);
-        console.log('[syncClock] [periodic] syncedTime:', syncedTime);
+        syncedTime = syncTime(timeZone);
+        console.log('[syncTime] [periodic] syncedTime:', syncedTime);
         setSeconds(() => toSeconds(syncedTime));
       }, 64000);
 
@@ -72,43 +65,9 @@ export default function useClockMovement(
     [timeZone]
   );
 
-  const secAngle = calculateAngle(seconds, minute, secTick, offset);
-  const minAngle = calculateAngle(seconds, hour, minTick, offset);
-  const hourAngle = calculateAngle(seconds, halfDay, hourTick, offset);
+  const secAngle = calculateArrowAngle('second', seconds, offset);
+  const minAngle = calculateArrowAngle('minute', seconds, offset);
+  const hourAngle = calculateArrowAngle('hour', seconds, offset);
 
   return { secAngle, minAngle, hourAngle };
-}
-
-function calculateAngle(
-  seconds: number,
-  parentInterval: number,
-  secAngle: number,
-  secOffset = 0
-): number {
-  return +(((seconds % parentInterval) + secOffset) * secAngle).toFixed(2);
-}
-
-function toSeconds({ hours, minutes, seconds }: timeObject): number {
-  const hSeconds = (hours % 24) * hour;
-  const mSeconds = (minutes % 60) * minute;
-  const sSeconds = (seconds % 60) * 1;
-
-  return sSeconds + mSeconds + hSeconds;
-}
-
-function calculateOffset(
-  clockMovementInput: ClockMovementInput | null
-): number {
-  if (!clockMovementInput || !clockMovementInput.startTime) return 0;
-
-  const { timeZone, startTime } = clockMovementInput;
-  const startSeconds = toSeconds(startTime);
-  const currSeconds = toSeconds(syncClock(timeZone));
-  const offset = startSeconds - currSeconds;
-
-  console.log('[calculateOffset] startSeconds:', startSeconds);
-  console.log('[calculateOffset] currSeconds:', currSeconds);
-  console.log('[calculateOffset] offset:', offset);
-
-  return offset;
 }

@@ -8,15 +8,35 @@ export type timeObject = {
 
 export class ClockMovementUtils {
   // Time intervals in seconds:
-  private static minute = 60;
-  private static hour = 3600;
-  private static halfDay = 43200;
-  private static day = 86400;
+  public static readonly minute = 60;
+  public static readonly hour = 3600;
+  public static readonly halfDay = 43200;
+  public static readonly day = 86400;
 
   // One second angle for arrows:
-  private static secTick = 6;
-  private static minTick = 360 / this.hour;
-  private static hourTick = 360 / this.halfDay;
+  public static readonly secTick = 6;
+  public static readonly minTick = 360 / this.hour;
+  public static readonly hourTick = 360 / this.halfDay;
+
+  private static coerceToInt(num: number): number {
+    if (Number.isSafeInteger(num)) {
+      return num;
+    } else if (
+      !num ||
+      Number.isNaN(num) ||
+      !Number.isFinite(num) ||
+      !Number.isSafeInteger(num)
+    ) {
+      // Coerce to zero:
+      console.log(
+        `[ClockMovementUtils][coerceToInt] Provided number value (${num}) was coerced to zero!`
+      );
+
+      return 0;
+    } else {
+      return Math.round(num);
+    }
+  }
 
   // For getting the current time (according to timezone):
   static syncTime(timeZone: TimeZone | null = null): timeObject {
@@ -70,22 +90,8 @@ export class ClockMovementUtils {
     let inputSeconds: number;
     if (typeof time !== 'number') {
       inputSeconds = this.toSeconds(time);
-    } else if (Number.isSafeInteger(time)) {
-      inputSeconds = time;
-    } else if (
-      !time ||
-      Number.isNaN(time) ||
-      !Number.isFinite(time) ||
-      !Number.isSafeInteger(time)
-    ) {
-      // Coerce to zero:
-      console.log(
-        `[calculateOffset] Provided time value (${time}) was coerced to zero!`
-      );
-
-      inputSeconds = 0;
     } else {
-      inputSeconds = Math.round(time);
+      inputSeconds = this.coerceToInt(time);
     }
 
     const offset = inputSeconds - syncedSeconds;

@@ -1,3 +1,5 @@
+// Utils
+import { ClockMovementUtils } from '../utils/clockMovementUtils';
 // 3rd party:
 // Redux RTK:
 // Store:
@@ -10,22 +12,24 @@ import useClockMovement from '../hooks/useClockMovement';
 import ClockArrow from './ClockArrow';
 // CSS:
 // Types, interfaces and enumns:
-import { useMemo, type FC } from 'react';
-import { TimeZones } from '../types/timeZones.type';
+import type { FC } from 'react';
+import { TimeZones, TimeZone, TimeObject } from '../types/index.type';
 interface ClockFaceProps {}
 
-const ClockFace: FC<ClockFaceProps> = () => {
-  const clockMovementInput = useMemo(
-    () => ({
-      timeZone: TimeZones.America_Bogota,
-      startTime: { hours: 3, minutes: 5, seconds: 45 },
-    }),
-    // null
-    []
-  );
+const timeObj: TimeObject = {
+  hours: 9,
+  minutes: 45,
+  seconds: 5,
+};
+const clockMovementInputArgs: [TimeZone | null, number] = [
+  TimeZones.Asia_Tokyo,
+  ClockMovementUtils.toSeconds(timeObj),
+];
 
-  const { secAngle, minAngle, hourAngle } =
-    useClockMovement(clockMovementInput);
+const ClockFace: FC<ClockFaceProps> = () => {
+  const { secAngle, minAngle, hourAngle } = useClockMovement(
+    ...clockMovementInputArgs
+  );
 
   // JSX:
   return (
