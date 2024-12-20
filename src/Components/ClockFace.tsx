@@ -28,7 +28,8 @@ const clockMovementInputArgs: [TimeZone | null, number] = [
 
 const ClockFace: FC<ClockFaceProps> = () => {
   const { secAngle, minAngle, hourAngle } = useClockMovement(
-    ...clockMovementInputArgs
+    // ...clockMovementInputArgs
+    null
   );
 
   // JSX:

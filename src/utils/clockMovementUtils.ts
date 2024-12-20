@@ -39,7 +39,7 @@ export class ClockMovementUtils {
   }
 
   // For getting the current time (according to timezone):
-  static syncTime(timeZone: TimeZone | null = null): timeObject {
+  public static syncTime = (timeZone: TimeZone | null = null): timeObject => {
     if (!timeZone) {
       timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZone;
     }
@@ -55,13 +55,13 @@ export class ClockMovementUtils {
     const [hours, minutes, seconds] = currentTime.split(':').map((str) => +str);
 
     return { hours, minutes, seconds };
-  }
+  };
 
-  static calculateArrowAngle(
+  public static calculateArrowAngle = (
     arrowType: ArrowType,
     seconds: number,
     secOffset: number = 0
-  ): number {
+  ): number => {
     const [parentInterval, angle] =
       arrowType === 'second'
         ? [this.minute, this.secTick]
@@ -69,20 +69,24 @@ export class ClockMovementUtils {
         ? [this.hour, this.minTick]
         : [this.halfDay, this.hourTick];
     return +(((seconds % parentInterval) + secOffset) * angle).toFixed(2);
-  }
+  };
 
-  static toSeconds({ hours, minutes, seconds }: timeObject): number {
+  public static toSeconds = ({
+    hours,
+    minutes,
+    seconds,
+  }: timeObject): number => {
     const hSeconds = (hours % 24) * this.hour;
     const mSeconds = (minutes % 60) * this.minute;
     const sSeconds = (seconds % 60) * 1;
 
     return sSeconds + mSeconds + hSeconds;
-  }
+  };
 
-  static calculateOffset(
+  public static calculateOffset = (
     time: timeObject | number = 0,
     timeZone: TimeZone | null = null
-  ): number {
+  ): number => {
     const syncedTime: timeObject = this.syncTime(timeZone);
     const syncedSeconds = this.toSeconds(syncedTime);
 
@@ -101,5 +105,5 @@ export class ClockMovementUtils {
     console.log('[calculateOffset] offset:', offset);
 
     return offset;
-  }
+  };
 }
