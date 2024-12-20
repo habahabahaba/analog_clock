@@ -20,10 +20,10 @@ let syncedTime: TimeObject;
 
 export default function useClockMovement(
   timeZone: TimeZone | null = null,
-  startSeconds: number = 0
+  startSeconds: number | null = null
 ): ClockMovementOutput {
   const offset = useMemo(
-    () => calculateOffset(startSeconds, timeZone),
+    () => (startSeconds === null ? 0 : calculateOffset(startSeconds, timeZone)),
     [startSeconds, timeZone]
   );
 
