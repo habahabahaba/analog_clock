@@ -33,9 +33,9 @@ const ClockFace: FC<ClockFaceProps> = () => {
       <ClockArrow arrowType='hour' angle={hourAngle} />
       <ClockArrow arrowType='minute' angle={minAngle} />
       <ClockArrow arrowType='second' angle={secAngle} />
-      {/* <ClockArrow arrowType='hour' angle={315} />
-      <ClockArrow arrowType='minute' angle={315} />
-      <ClockArrow arrowType='second' angle={315} /> */}
+      {/* <ClockArrow arrowType='hour' angle={270} />
+      <ClockArrow arrowType='minute' angle={0} />
+      <ClockArrow arrowType='second' angle={180} /> */}
     </div>
   );
 };

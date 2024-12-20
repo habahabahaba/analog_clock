@@ -43,7 +43,7 @@ export default function useClockMovement(
       setSeconds((state) => (state + 1) % day);
     }, 1000);
 
-    // Clear interval:
+    // Clear the interval:
     return () => {
       clearInterval(tickId);
     };
@@ -64,6 +64,7 @@ export default function useClockMovement(
         setSeconds(() => toSeconds(syncedTime));
       }, 64000);
 
+      // Clear the interval:
       return () => {
         clearInterval(syncId);
       };

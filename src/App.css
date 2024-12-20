@@ -8,12 +8,20 @@
   height: calc(var(--clock-radius) * 2);
   background-color: yellow;
   margin: 100px;
-  background-image: url(./dial-00.webp);
+  background-image: url(./clock-dials/dial-08.webp);
   background-size: cover;
   background-position: center;
+
+  /* for testing arrows centering */
   /* background: radial-gradient(
     circle,
-    red 7%, white 7%
+    red 38%,
+    red 38%,
+    white 38%,
+    white 54.5%,
+    red 54.5%,
+    red 57.5%,
+    white 57.5%
   ); */
 }
 /* Arrows */
