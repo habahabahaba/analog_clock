@@ -1,10 +1,6 @@
 export type ArrowType = 'hour' | 'minute' | 'second';
 
-export type TimeObject = {
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
+export type TimeString = `${number}:${number}:${number}`;
 
 export enum TimeZones {
   // America

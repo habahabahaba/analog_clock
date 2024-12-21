@@ -1,10 +1,5 @@
 // Types, interfaces and enumns:
-import { TimeZone, ArrowType } from '../types/index.type';
-export type timeObject = {
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
+import type { TimeZone, ArrowType, TimeString } from '../types/index.type';
 
 export class ClockMovementUtils {
   // Time intervals in seconds:
@@ -37,24 +32,29 @@ export class ClockMovementUtils {
       return Math.round(num);
     }
   }
+  public static validateTimeString(time: string): asserts time is TimeString {
+    if (!/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(time)) {
+      throw new Error(`Invalid time string: ${time}`);
+    }
+  }
 
   // For getting the current time (according to timezone):
-  public static syncTime = (timeZone: TimeZone | null = null): timeObject => {
+  public static syncTime = (timeZone: TimeZone | null = null): TimeString => {
     if (!timeZone) {
       timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone as TimeZone;
     }
 
-    const currentTime = new Intl.DateTimeFormat('UTC', {
+    const time24String = new Intl.DateTimeFormat('UTC', {
       timeZone,
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
       hour12: false,
-    }).format(new Date());
+    }).format(new Date()) as TimeString;
 
-    const [hours, minutes, seconds] = currentTime.split(':').map((str) => +str);
+    this.validateTimeString(time24String);
 
-    return { hours, minutes, seconds };
+    return time24String;
   };
 
   public static calculateArrowAngle = (
@@ -71,23 +71,20 @@ export class ClockMovementUtils {
     return +(((seconds % parentInterval) + secOffset) * angle).toFixed(2);
   };
 
-  public static toSeconds = ({
-    hours,
-    minutes,
-    seconds,
-  }: timeObject): number => {
-    const hSeconds = (hours % 24) * this.hour;
-    const mSeconds = (minutes % 60) * this.minute;
-    const sSeconds = (seconds % 60) * 1;
+  public static toSeconds = (timeString: TimeString): number => {
+    const [hours, minutes, seconds] = timeString.split(':');
+    const hSeconds = (+hours % 24) * this.hour;
+    const mSeconds = (+minutes % 60) * this.minute;
+    const sSeconds = (+seconds % 60) * 1;
 
     return sSeconds + mSeconds + hSeconds;
   };
 
   public static calculateOffset = (
-    time: timeObject | number = 0,
+    time: TimeString | number = 0,
     timeZone: TimeZone | null = null
   ): number => {
-    const syncedTime: timeObject = this.syncTime(timeZone);
+    const syncedTime: TimeString = this.syncTime(timeZone);
     const syncedSeconds = this.toSeconds(syncedTime);
 
     // Determining the actual type of the time argument and converting it to seconds:

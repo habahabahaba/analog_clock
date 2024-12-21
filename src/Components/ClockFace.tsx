@@ -14,7 +14,7 @@ import ClockDial from './ClockDial';
 // CSS:
 // Types, interfaces and enumns:
 import type { FC } from 'react';
-import { TimeZones, TimeZone, TimeObject } from '../types/index.type';
+import { TimeZones, TimeZone, TimeString } from '../types/index.type';
 interface ClockFaceProps {}
 
 const calibratedDials = [
@@ -79,26 +79,22 @@ const calibratedDials = [
   },
 ];
 
-const timeObj: TimeObject = {
-  hours: 9,
-  minutes: 45,
-  seconds: 5,
-};
+const timeString: TimeString = '09:15:30';
 const clockMovementInputArgs: [TimeZone | null, number] = [
   TimeZones.Asia_Tokyo,
-  ClockMovementUtils.toSeconds(timeObj),
+  ClockMovementUtils.toSeconds(timeString),
 ];
 
 const ClockFace: FC<ClockFaceProps> = () => {
   const { secAngle, minAngle, hourAngle } = useClockMovement(
-    // ...clockMovementInputArgs
-    null
+    ...clockMovementInputArgs
+    // null
   );
 
   // JSX:
   return (
     <div className='face'>
-      <ClockDial {...calibratedDials[8]} />
+      <ClockDial {...calibratedDials[1]} />
       <ClockArrow arrowType='hour' angle={hourAngle} />
       <ClockArrow arrowType='minute' angle={minAngle} />
       <ClockArrow arrowType='second' angle={secAngle} />

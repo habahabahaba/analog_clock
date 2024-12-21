@@ -3,7 +3,7 @@ import { ClockMovementUtils } from '../utils/clockMovementUtils.ts';
 // React:
 import { useState, useEffect, useMemo } from 'react';
 // Types, interfaces and enumns:
-import type { TimeZone, TimeObject } from '../types/index.type.ts';
+import type { TimeZone, TimeString } from '../types/index.type.ts';
 interface ClockMovementOutput {
   secAngle: number;
   minAngle: number;
@@ -16,7 +16,7 @@ const { calculateOffset, syncTime, toSeconds, calculateArrowAngle, day } =
 
 let tickId: number;
 let syncId: number;
-let syncedTime: TimeObject;
+let syncedTime: TimeString;
 
 export default function useClockMovement(
   timeZone: TimeZone | null = null,
