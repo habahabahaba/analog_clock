@@ -33,7 +33,7 @@ export class ClockMovementUtils {
     }
   }
   public static validateTimeString(time: string): asserts time is TimeString {
-    if (!/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(time)) {
+    if (!/^(24:[0-5]\d:[0-5]\d|([01]\d|2[0-3]):[0-5]\d:[0-5]\d)$/.test(time)) {
       throw new Error(`Invalid time string: ${time}`);
     }
   }

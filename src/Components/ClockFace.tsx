@@ -87,14 +87,14 @@ const clockMovementInputArgs: [TimeZone | null, number] = [
 
 const ClockFace: FC<ClockFaceProps> = () => {
   const { secAngle, minAngle, hourAngle } = useClockMovement(
-    ...clockMovementInputArgs
-    // null
+    // ...clockMovementInputArgs
+    null
   );
 
   // JSX:
   return (
     <div className='face'>
-      <ClockDial {...calibratedDials[1]} />
+      <ClockDial {...calibratedDials[0]} />
       <ClockArrow arrowType='hour' angle={hourAngle} />
       <ClockArrow arrowType='minute' angle={minAngle} />
       <ClockArrow arrowType='second' angle={secAngle} />
