@@ -5,6 +5,7 @@ import { ClockMovementUtils } from '../utils/clockMovementUtils';
 // Store:
 // React Router:
 // React:
+import { useState } from 'react';
 // Context:
 // Hooks:
 import useClockMovement from '../hooks/useClockMovement';
@@ -13,7 +14,7 @@ import ClockArrow from './ClockArrow';
 import ClockDial from './ClockDial';
 // CSS:
 // Types, interfaces and enumns:
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { TimeZones, TimeZone, TimeString } from '../types/index.type';
 interface ClockFaceProps {}
 
@@ -80,27 +81,46 @@ const calibratedDials = [
 ];
 
 const timeString: TimeString = '09:15:30';
-const clockMovementInputArgs: [TimeZone | null, number] = [
+const clockMovementInputArgs: [TimeZone | null] = [
   TimeZones.Asia_Tokyo,
-  ClockMovementUtils.toSeconds(timeString),
+  // ClockMovementUtils.toSeconds(timeString),
 ];
 
 const ClockFace: FC<ClockFaceProps> = () => {
-  const { secAngle, minAngle, hourAngle } = useClockMovement(
-    // ...clockMovementInputArgs
-    null
+  // State:
+  const [running, setRunning] = useState(true);
+  const [startSeconds, setStartSeconds] = useState(0);
+
+  const { secAngle, minAngle, hourAngle, seconds } = useClockMovement(
+    ...clockMovementInputArgs,
+    startSeconds,
+    running
+    // null
   );
+
+  // Handlers:
+  function handlePause() {
+    if (running) {
+      setRunning(false);
+    } else {
+      setStartSeconds(() => seconds);
+      setRunning(true);
+    }
+  }
 
   // JSX:
   return (
-    <div className='face'>
-      <ClockDial {...calibratedDials[0]} />
-      <ClockArrow arrowType='hour' angle={hourAngle} />
-      <ClockArrow arrowType='minute' angle={minAngle} />
-      <ClockArrow arrowType='second' angle={secAngle} />
-      {/* <ClockArrow arrowType='hour' angle={270} />
-      <ClockArrow arrowType='minute' angle={0} />
-      <ClockArrow arrowType='second' angle={180} /> */}
+    <div>
+      <button onClick={handlePause}>{running ? 'Pause' : 'Start'}</button>
+      <div className='face'>
+        <ClockDial {...calibratedDials[8]} />
+        <ClockArrow arrowType='hour' angle={hourAngle} />
+        <ClockArrow arrowType='minute' angle={minAngle} />
+        <ClockArrow arrowType='second' angle={secAngle} />
+        {/* <ClockArrow arrowType='hour' angle={270} />
+        <ClockArrow arrowType='minute' angle={0} />
+        <ClockArrow arrowType='second' angle={180} /> */}
+      </div>
     </div>
   );
 };

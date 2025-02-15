@@ -8,6 +8,7 @@ interface ClockMovementOutput {
   secAngle: number;
   minAngle: number;
   hourAngle: number;
+  seconds: number;
 }
 
 // Getting helpers from ClockMovementUtils:
@@ -20,7 +21,8 @@ let syncedTime: TimeString;
 
 export default function useClockMovement(
   timeZone: TimeZone | null = null,
-  startSeconds: number | null = null
+  startSeconds: number | null = null,
+  running = true
 ): ClockMovementOutput {
   const offset = useMemo(
     () => (startSeconds === null ? 0 : calculateOffset(startSeconds, timeZone)),
@@ -31,30 +33,45 @@ export default function useClockMovement(
   const [seconds, setSeconds] = useState(0);
 
   // Initiating arrows rotation:
-  useEffect(function tick() {
-    tickId = setInterval(() => {
-      setSeconds((state) => (state + 1) % day);
-    }, 1000);
+  useEffect(
+    function tick() {
+      if (!running) {
+        if (tickId) {
+          clearInterval(tickId);
+        }
+        return;
+      }
+      tickId = setInterval(() => {
+        setSeconds((state) => (state + 1) % day);
+      }, 1000);
 
-    // Clear the interval:
-    return () => {
-      clearInterval(tickId);
-    };
-  }, []);
+      // Clear the interval:
+      return () => {
+        clearInterval(tickId);
+      };
+    },
+    [running]
+  );
 
   // Syncing the clock:
   useEffect(
     function sync() {
+      if (!running) {
+        if (syncId) {
+          clearInterval(syncId);
+        }
+        return;
+      }
       // Initial time sync:
       syncedTime = syncTime(timeZone);
       console.log('[syncTime] [initial] syncedTime:', syncedTime);
-      setSeconds(() => toSeconds(syncedTime));
+      setSeconds(() => toSeconds(syncedTime) + offset);
 
       // Periodic time sync (every 64 seconds):
       syncId = setInterval(() => {
         syncedTime = syncTime(timeZone);
         console.log('[syncTime] [periodic] syncedTime:', syncedTime);
-        setSeconds(() => toSeconds(syncedTime));
+        setSeconds(() => toSeconds(syncedTime) + offset);
       }, 64000);
 
       // Clear the interval:
@@ -62,12 +79,12 @@ export default function useClockMovement(
         clearInterval(syncId);
       };
     },
-    [timeZone]
+    [timeZone, running, offset]
   );
 
-  const secAngle = calculateArrowAngle('second', seconds, offset);
-  const minAngle = calculateArrowAngle('minute', seconds, offset);
-  const hourAngle = calculateArrowAngle('hour', seconds, offset);
+  const secAngle = calculateArrowAngle('second', seconds, 0);
+  const minAngle = calculateArrowAngle('minute', seconds, 0);
+  const hourAngle = calculateArrowAngle('hour', seconds, 0);
 
-  return { secAngle, minAngle, hourAngle };
+  return { secAngle, minAngle, hourAngle, seconds: seconds + 0 };
 }
