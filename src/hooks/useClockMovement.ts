@@ -9,6 +9,7 @@ interface ClockMovementOutput {
   minAngle: number;
   hourAngle: number;
   seconds: number;
+  offset: number;
 }
 
 // Getting helpers from ClockMovementUtils:
@@ -86,5 +87,5 @@ export default function useClockMovement(
   const minAngle = calculateArrowAngle('minute', seconds, 0);
   const hourAngle = calculateArrowAngle('hour', seconds, 0);
 
-  return { secAngle, minAngle, hourAngle, seconds: seconds + 0 };
+  return { secAngle, minAngle, hourAngle, seconds, offset };
 }

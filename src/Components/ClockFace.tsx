@@ -103,7 +103,7 @@ const ClockFace: FC<ClockFaceProps> = () => {
     if (running) {
       setRunning(false);
     } else {
-      setStartSeconds(() => seconds);
+      setStartSeconds(() => seconds + 1);
       setRunning(true);
     }
   }
